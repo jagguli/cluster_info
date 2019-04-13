@@ -84,9 +84,9 @@ application_info(C) ->
          cluster_info:format(C, " ~p\n\n", [application:get_all_key(App)]),
          cluster_info:format(C, " Application:get_all_env(~p):\n", [App]),
          cluster_info:format(C, " ~p\n\n", [application:get_all_env(App)])
-     catch X:Y ->
+     catch X:Y:S ->
              cluster_info:format(C, "Error for ~p: ~p ~p at ~p\n",
-                                 [App, X, Y, erlang:get_stacktrace()])
+                                 [App, X, Y, S])
      end || App <- lists:sort([A || {A, _, _} <- application:which_applications()])].
 
 capture_ets_i(C) ->
@@ -174,9 +174,9 @@ loaded_modules(C) ->
     [try
          cluster_info:format(C, " Module ~p:\n", [Mod]),
          cluster_info:format(C, " ~p\n\n", [Mod:module_info()])
-     catch X:Y ->
+     catch X:Y:S ->
              cluster_info:format(C, "Error for ~p: ~p ~p at ~p\n",
-                                 [Mod, X, Y, erlang:get_stacktrace()])
+                                 [Mod, X, Y, S])
      end || Mod <- lists:sort([M || {M, _} <- code:all_loaded()])].
 
 memory_hogs(C, Num) ->

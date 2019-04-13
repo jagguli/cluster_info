@@ -125,9 +125,9 @@ dump_node(Node, Path, Opts) when is_atom(Node), is_list(Path) ->
     MRef = monitor(process, Remote),
     try
         ok = collect_remote_info(Remote, FH)
-    catch X:Y ->
+    catch X:Y:S ->
         io:format("Error: ~P ~P at ~p\n",
-            [X, 20, Y, 20, erlang:get_stacktrace()]),
+            [X, 20, Y, 20, S]),
         error
     after
         demonitor(MRef, [flush]),
@@ -272,9 +272,9 @@ dump_local_info(CPid, Opts) ->
                                           [Name, node()]),
                           format_noescape(CPid, "<pre>\n", []),
                           Fun(CPid)
-                      catch X:Y ->
+                      catch X:Y:S ->
                               format(CPid, "Error in ~p: ~p ~p at ~p\n",
-                                     [Name, X, Y, erlang:get_stacktrace()])
+                                     [Name, X, Y, S])
                       after
                           format_noescape(CPid, "</pre>\n", []),
                           format_noescape(CPid, "\n",[])
